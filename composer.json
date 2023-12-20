@@ -1,0 +1,21 @@
+{
+    "name": "phpdie/notify",
+    "description": "notify",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Notify\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "phpdie",
+            "email": "sundaysunsun@vip.qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+
+    }
+}
