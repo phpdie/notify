@@ -2,7 +2,7 @@
 
 namespace Notify;
 
-class DingWebHook
+class DingDing
 {
     private $msgtype;
 

@@ -1,7 +1,7 @@
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
 
-$client = new \Notify\DingWebHook('你的机器人webhook地址');
+$client = new \Notify\DingDing('你的机器人webhook地址');
 
 /*
 $text = new \stdClass();
