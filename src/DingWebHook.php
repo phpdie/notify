@@ -70,7 +70,7 @@ class DingWebHook
         return $data;
     }
 
-    public function formatData($params)
+    private function formatData($params)
     {
         $data = [];
         foreach ($params as $key => $val) {
