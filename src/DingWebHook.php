@@ -1,10 +1,13 @@
 <?php
 
 namespace Notify;
+
 class DingWebHook
 {
     private $msgtype;
+
     private $webhook;
+
     private $ssl;
 
     public function __construct($webhook = '', $ssl = true, $msgtype = '')
@@ -67,48 +70,50 @@ class DingWebHook
         return $data;
     }
 
-    public function formatData(...$params)
+    public function formatData($params)
     {
         $data = [];
         foreach ($params as $key => $val) {
-            $data = array_merge($data, [$key => $val]);
+            if ($val) {
+                $data[$key] = $val;
+            }
         }
-        $data = array_merge($data, ['msgtype' => $this->getMsgtype()]);
+        $data['msgtype'] = $this->getMsgtype();
         return json_encode($data);
     }
 
     public function sendText($text, $at = null)
     {
         $this->setMsgtype('text');
-        $post_string = $this->formatData($text, $at);
+        $post_string = $this->formatData(['text' => $text, 'at' => $at]);
         return $this->send($post_string);
     }
 
     public function sendLink($link)
     {
         $this->setMsgtype('link');
-        $post_string = $this->formatData($link);
+        $post_string = $this->formatData(['link' => $link]);
         return $this->send($post_string);
     }
 
     public function sendMarkdown($markdown, $at = null)
     {
         $this->setMsgtype('markdown');
-        $post_string = $this->formatData($markdown, $at);
+        $post_string = $this->formatData(['markdown' => $markdown, 'at' => $at]);
         return $this->send($post_string);
     }
 
     public function sendActionCard($actionCard)
     {
         $this->setMsgtype('actionCard');
-        $post_string = $this->formatData($actionCard);
+        $post_string = $this->formatData(['actionCard' => $actionCard]);
         return $this->send($post_string);
     }
 
     public function sendFeedCard($feedCard)
     {
         $this->setMsgtype('feedCard');
-        $post_string = $this->formatData($feedCard);
+        $post_string = $this->formatData(['feedCard' => $feedCard]);
         return $this->send($post_string);
     }
 }
