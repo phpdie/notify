@@ -10,6 +10,10 @@ class DingDing
 
     private $ssl;
 
+    private $isAtAll = false;
+    private $atMobiles = [];
+    private $atUserIds = [];
+
     public function __construct($webhook = '', $ssl = true, $msgtype = '')
     {
         if ($webhook) {
@@ -19,6 +23,39 @@ class DingDing
             $this->setMsgtype($msgtype);
         }
         $this->setSsl($ssl);
+    }
+
+    public function isAtAll()
+    {
+        return $this->isAtAll;
+    }
+
+    public function setIsAtAll($isAtAll)
+    {
+        $this->isAtAll = $isAtAll;
+        return $this;
+    }
+
+    public function getAtMobiles()
+    {
+        return $this->atMobiles;
+    }
+
+    public function setAtMobiles($atMobiles)
+    {
+        $this->atMobiles = $atMobiles;
+        return $this;
+    }
+
+    public function getAtUserIds()
+    {
+        return $this->atUserIds;
+    }
+
+    public function setAtUserIds(array $atUserIds)
+    {
+        $this->atUserIds = $atUserIds;
+        return $this;
     }
 
     public function getMsgtype()
@@ -86,38 +123,60 @@ class DingDing
         return json_encode($data);
     }
 
-    public function sendText($text, $at = null)
+    private function formatAt()
+    {
+        $at['isAtAll'] = $this->isAtAll();
+        $at['atMobiles'] = $this->getAtMobiles();
+        $at['atUserIds'] = $this->getAtUserIds();
+        return $at;
+    }
+
+    public function sendText($text)
     {
         $this->setMsgtype('text');
-        $post_string = $this->formatData(['text' => $text, 'at' => $at]);
+        $post_string = $this->formatData(['text' => ['content' => $text], 'at' => $this->formatAt()]);
         return $this->send($post_string);
     }
 
-    public function sendLink($link)
+    public function sendLink($title, $text, $messageUrl, $picUrl = '')
     {
         $this->setMsgtype('link');
-        $post_string = $this->formatData(['link' => $link]);
+        $post_string = $this->formatData([
+            'link' => [
+                'title' => $title,
+                'text' => $text,
+                'messageUrl' => $messageUrl,
+                'picUrl' => $picUrl
+            ]
+        ]);
         return $this->send($post_string);
     }
 
-    public function sendMarkdown($markdown, $at = null)
+    public function sendMarkdown($title, $text)
     {
         $this->setMsgtype('markdown');
-        $post_string = $this->formatData(['markdown' => $markdown, 'at' => $at]);
+        $post_string = $this->formatData(['markdown' => ['title' => $title, 'text' => $text], 'at' => $this->formatAt()]);
         return $this->send($post_string);
     }
 
-    public function sendActionCard($actionCard)
+    public function sendActionCard($title, $text, $singleTitle, $singleURL)
     {
         $this->setMsgtype('actionCard');
-        $post_string = $this->formatData(['actionCard' => $actionCard]);
+        $post_string = $this->formatData([
+            'actionCard' => [
+                'title' => $title,
+                'text' => $text,
+                'singleTitle' => $singleTitle,
+                'singleURL' => $singleURL
+            ]
+        ]);
         return $this->send($post_string);
     }
 
     public function sendFeedCard($feedCard)
     {
         $this->setMsgtype('feedCard');
-        $post_string = $this->formatData(['feedCard' => $feedCard]);
+        $post_string = $this->formatData(['feedCard' => ['links' => $feedCard]]);
         return $this->send($post_string);
     }
 
