@@ -26,6 +26,10 @@ class DingDing
         return $this->msgtype;
     }
 
+    /** https://open.dingtalk.com/document/isvapp/message-type
+     * @param $msgtype
+     * @return void
+     */
     public function setMsgtype($msgtype)
     {
         $this->msgtype = $msgtype;
@@ -70,7 +74,7 @@ class DingDing
         return $data;
     }
 
-    private function formatData($params)
+    private function formatData($params = [])
     {
         $data = [];
         foreach ($params as $key => $val) {
@@ -114,6 +118,13 @@ class DingDing
     {
         $this->setMsgtype('feedCard');
         $post_string = $this->formatData(['feedCard' => $feedCard]);
+        return $this->send($post_string);
+    }
+
+    public function sendEmpty()
+    {
+        $this->setMsgtype('empty');
+        $post_string = $this->formatData();
         return $this->send($post_string);
     }
 }
